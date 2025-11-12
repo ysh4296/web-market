@@ -1,16 +1,18 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
     "jsx": "react-jsx",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
-    "moduleResolution": "Node",
-    "resolveJsonModule": true,
-    "noEmit": true
+    "baseUrl": "src",
+    "paths": {
+      "@components/*": ["components/*"],
+      "@hooks/*": ["hooks/*"],
+      "@pages/*": ["pages/*"],
+      "@utils/*": ["utils/*"],
+      "@styles/*": ["styles/*"],
+      "@assets/*": ["assets/*"],
+      "@store/*": ["store/*"],
+      "@contents/*": ["contents/*"],
+      "@engine/*": ["engine/*"]
+    }
   },
-  "include": ["src/**/*", "gatsby-*.ts", "plugins/**/*"]
+  "include": ["./src/**/*"]
 }

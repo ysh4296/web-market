@@ -12,20 +12,23 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@radix-ui/themes": "^3.2.1",
     "gatsby": "^5.0.0",
     "gatsby-plugin-typescript": "^5.15.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@babel/preset-react": "^7.28.5",
+    "@biomejs/biome": "1.9.4",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.3",
     "@types/react-dom": "^19.2.3",
-    "typescript": "^5.9.3",
-    "@biomejs/biome": "1.9.4",
     "babel-plugin-module-resolver": "^5.0.2",
+    "gatsby-plugin-babel": "^1.0.0",
     "husky": "^9.1.7",
-    "lint-staged": "^15.4.1"
+    "lint-staged": "^15.4.1",
+    "typescript": "^5.9.3"
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [
