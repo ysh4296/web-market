@@ -9,6 +9,7 @@ import {
   Box,
 } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
+import { BrandingView } from "@views/BrandingView";
 
 function ImagePlaceholder({
   label,
@@ -51,43 +52,7 @@ export default function AntiMotionSicknessLanding() {
           width: "100%",
         }}
       >
-        {/* Hero */}
-        <section
-          style={{
-            width: "100%",
-            minHeight: "80vh",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            textAlign: "center",
-            background: "linear-gradient(180deg, #0f172a 0%, #111827 100%)",
-          }}
-        >
-          <Container size="3" style={{ maxWidth: 720, margin: "0 auto" }}>
-            <Heading size="9" style={{ lineHeight: 1.1, marginBottom: 12 }}>
-              3D 멀미, 이제는 그만
-            </Heading>
-            <Text size="5" color="gray">
-              시야 안정 레이아웃으로 방향감과 몰입감을 동시에 지킨다
-            </Text>
-            <div
-              style={{
-                marginTop: 28,
-                display: "flex",
-                gap: 12,
-                justifyContent: "center",
-              }}
-            >
-              <Button size="4" variant="solid">
-                지금 체험하기
-              </Button>
-              <Button size="4" variant="soft">
-                문서 보기
-              </Button>
-            </div>
-          </Container>
-        </section>
+        <BrandingView />
 
         <Separator size="4" />
 

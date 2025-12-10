@@ -4,14 +4,14 @@
     "baseUrl": "src",
     "paths": {
       "@components/*": ["components/*"],
-      "@hooks/*": ["hooks/*"],
       "@pages/*": ["pages/*"],
       "@utils/*": ["utils/*"],
       "@styles/*": ["styles/*"],
       "@assets/*": ["assets/*"],
       "@store/*": ["store/*"],
       "@contents/*": ["contents/*"],
-      "@engine/*": ["engine/*"]
+      "@views/*": ["views/*"],
+      "@images/*": ["images/*"]
     }
   },
   "include": ["./src/**/*"]
