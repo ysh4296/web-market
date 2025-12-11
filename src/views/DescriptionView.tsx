@@ -1,9 +1,15 @@
+import useInView from "@hooks/useInView";
 import { Container, Typography, Box, Card } from "@mui/material";
+import { fadeUp } from "@utils/keyFrames";
 
 const DescriptionView = () => {
+  const { ref, inView } = useInView({
+    threshold: 0.5, // 50% 보이는 순간 트리거
+  });
+
   return (
     <section style={{ width: "100%", padding: "60px 0" }}>
-      <Container maxWidth="lg">
+      <Container ref={ref} maxWidth="lg">
         <Box
           sx={{
             display: "flex",
@@ -14,13 +20,25 @@ const DescriptionView = () => {
         >
           {/* 왼쪽 — 문제 + 해결 서론 */}
           <Box sx={{ flex: 1, textAlign: { xs: "center", md: "left" } }}>
-            <Typography variant="h4" sx={{ mb: 2 }}>
+            <Typography
+              variant="h4"
+              sx={{
+                animation: inView ? `${fadeUp} .6s ease-out` : "none",
+                opacity: inView ? 1 : 0,
+                mb: 2,
+              }}
+            >
               왜 멀미가 생길까?
             </Typography>
 
             <Typography
               variant="body1"
-              sx={{ color: "grey.300", lineHeight: 1.7 }}
+              sx={{
+                color: "grey.300",
+                animation: inView ? `${fadeUp} .6s ease-out` : "none",
+                opacity: inView ? 1 : 0,
+                lineHeight: 1.7,
+              }}
             >
               3D 게임에서 카메라가 빠르게 회전하거나 시야가 흔들리면, 뇌는 시각
               정보와 평형감각 사이에서 불일치를 감지해요. 이 작은 차이가
@@ -43,16 +61,41 @@ const DescriptionView = () => {
                 backdropFilter: "blur(4px)",
                 border: "1px solid rgba(255,255,255,0.08)",
                 boxShadow: "0 0 16px rgba(99,102,241,0.2)",
+                animation: inView ? `${fadeUp} .6s ease-out` : "none",
+                opacity: inView ? 1 : 0,
               }}
             >
-              <Typography variant="h4" sx={{ mb: 3, textAlign: "left" }}>
+              <Typography
+                variant="h4"
+                sx={{
+                  mb: 3,
+                  textAlign: "left",
+                  animation: inView ? `${fadeUp} .6s ease-out` : "none",
+                  opacity: inView ? 1 : 0,
+                }}
+              >
                 우리는 이렇게 해결한다
               </Typography>
 
               {/* item 1 */}
               <Box sx={{ mb: 3 }}>
-                <Typography variant="h6">시야 중심 고정 HUD</Typography>
-                <Typography sx={{ color: "grey.300", lineHeight: 1.6 }}>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    animation: inView ? `${fadeUp} .6s ease-out` : "none",
+                    opacity: inView ? 1 : 0,
+                  }}
+                >
+                  시야 중심 고정 HUD
+                </Typography>
+                <Typography
+                  sx={{
+                    color: "grey.300",
+                    lineHeight: 1.6,
+                    animation: inView ? `${fadeUp} .6s ease-out` : "none",
+                    opacity: inView ? 1 : 0,
+                  }}
+                >
                   화면에 안정적인 기준점을 제공해 급격한 회전이나 롤링
                   상황에서도 방향 감각을 잃지 않게 도와줘요.
                 </Typography>
@@ -60,8 +103,23 @@ const DescriptionView = () => {
 
               {/* item 2 */}
               <Box sx={{ mb: 3 }}>
-                <Typography variant="h6">자동 밝기·대비 보정</Typography>
-                <Typography sx={{ color: "grey.300", lineHeight: 1.6 }}>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    animation: inView ? `${fadeUp} .6s ease-out` : "none",
+                    opacity: inView ? 1 : 0,
+                  }}
+                >
+                  자동 밝기·대비 보정
+                </Typography>
+                <Typography
+                  sx={{
+                    color: "grey.300",
+                    lineHeight: 1.6,
+                    animation: inView ? `${fadeUp} .6s ease-out` : "none",
+                    opacity: inView ? 1 : 0,
+                  }}
+                >
                   크기, 색상, 투명도를 조절해서 개인에게 가장 잘맞는 레이아웃을
                   설정해요.
                 </Typography>

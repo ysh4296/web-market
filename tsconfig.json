@@ -11,7 +11,8 @@
       "@store/*": ["store/*"],
       "@contents/*": ["contents/*"],
       "@views/*": ["views/*"],
-      "@images/*": ["images/*"]
+      "@images/*": ["images/*"],
+      "@hooks/*": ["hooks/*"]
     }
   },
   "include": ["./src/**/*"]

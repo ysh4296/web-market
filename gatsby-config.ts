@@ -19,6 +19,7 @@ const config: GatsbyConfig = {
           "@views": "src/views",
           "@images": "src/images",
           "@utils": "src/utils",
+          "@hooks": "src/hooks",
         },
         extensions: [".ts", ".tsx", ".js", ".jsx"],
       },

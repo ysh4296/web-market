@@ -1,7 +1,8 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 
 export default function DemoView() {
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const mountRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -13,7 +14,7 @@ export default function DemoView() {
     scene.fog = new THREE.Fog("#87CEEB", 20, 150);
 
     // ===== CAMERA (FPS) =====
-    const camera = new THREE.PerspectiveCamera(110, 800 / 600, 0.1, 500);
+    const camera = new THREE.PerspectiveCamera(125, 800 / 600, 0.05, 500);
 
     const yawGroup = new THREE.Object3D();
     const pitchGroup = new THREE.Object3D();
@@ -24,8 +25,16 @@ export default function DemoView() {
     scene.add(yawGroup);
 
     // ===== RENDERER =====
+    const getSize = () => {
+      const rect = mountRef.current?.getBoundingClientRect();
+      return rect
+        ? { width: rect.width, height: rect.height }
+        : { width: 800, height: 600 };
+    };
+
     const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(800, 600);
+    const initialSize = getSize();
+    renderer.setSize(initialSize.width, initialSize.height);
     renderer.shadowMap.enabled = true;
     mountRef.current.appendChild(renderer.domElement);
 
@@ -38,17 +47,75 @@ export default function DemoView() {
     scene.add(sun);
 
     // ===== FLOOR =====
+    const groundTexture = (() => {
+      const canvas = document.createElement("canvas");
+      canvas.width = 512;
+      canvas.height = 512;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return null;
+
+      const gradient = ctx.createLinearGradient(0, 0, 512, 512);
+      gradient.addColorStop(0, "#8c6a48");
+      gradient.addColorStop(1, "#6d5236");
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, 512, 512);
+
+      const image = ctx.getImageData(0, 0, 512, 512);
+      for (let i = 0; i < image.data.length; i += 4) {
+        const n = Math.floor((Math.random() - 0.5) * 35);
+        image.data[i] = Math.min(165, Math.max(90, image.data[i] + n));
+        image.data[i + 1] = Math.min(140, Math.max(70, image.data[i + 1] + n));
+        image.data[i + 2] = Math.min(115, Math.max(60, image.data[i + 2] + n));
+      }
+      ctx.putImageData(image, 0, 0);
+
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+      texture.repeat.set(10, 10);
+      texture.anisotropy = 8;
+      return texture;
+    })();
+
     const floor = new THREE.Mesh(
       new THREE.PlaneGeometry(200, 200),
-      new THREE.MeshPhongMaterial({ color: "#8B4513" }),
+      new THREE.MeshStandardMaterial({
+        map: groundTexture ?? undefined,
+        color: groundTexture ? undefined : "#8c6a48",
+        roughness: 0.92,
+        metalness: 0,
+      }),
     );
     floor.rotation.x = -Math.PI / 2;
+    floor.receiveShadow = true;
     scene.add(floor);
 
     // ===== GRID =====
     const grid = new THREE.GridHelper(200, 60, "#ffffff", "#cccccc");
     grid.position.y = 0.02;
     scene.add(grid);
+
+    // ===== GROUND DOTS =====
+    const dotGeometry = new THREE.CylinderGeometry(0.05, 0.05, 0.02, 6);
+    const dotMaterial = new THREE.MeshStandardMaterial({
+      color: "#f5f5f5",
+      emissive: "#dddddd",
+      emissiveIntensity: 0.35,
+      roughness: 0.4,
+      metalness: 0,
+    });
+    const dots = new THREE.InstancedMesh(dotGeometry, dotMaterial, 50 * 50);
+    let dotIndex = 0;
+    for (let x = -50; x < 50; x += 2) {
+      for (let z = -50; z < 50; z += 2) {
+        const matrix = new THREE.Matrix4();
+        matrix.makeTranslation(x, 0.02, z);
+        dots.setMatrixAt(dotIndex++, matrix);
+      }
+    }
+    dots.instanceMatrix.needsUpdate = true;
+    dots.castShadow = false;
+    dots.receiveShadow = true;
+    scene.add(dots);
 
     // ===== BOUNDARY AREA =====
     const AREA = 40;
@@ -72,42 +139,194 @@ export default function DemoView() {
     createWall(0, AREA, -Math.PI / 2);
     createWall(0, -AREA, Math.PI / 2);
 
-    // =====================================================
-    // ========== TREE GENERATION (UNCHANGED) ==============
-    // =====================================================
+    // ===== OBSTACLES =====
+    const obstacleGroup = new THREE.Group();
+    scene.add(obstacleGroup);
 
-    for (let i = 0; i < 60; i++) {
-      const x = (Math.random() - 0.5) * AREA * 2;
-      const z = (Math.random() - 0.5) * AREA * 2;
+    const spawnRadiusBuffer = 6;
+    const spawnRange = AREA - 2;
 
-      const trunkHeight = 2 + Math.random() * 4;
+    const randomXZ = () => {
+      let x = 0;
+      let z = 0;
+      do {
+        x = (Math.random() - 0.5) * spawnRange * 2;
+        z = (Math.random() - 0.5) * spawnRange * 2;
+      } while (Math.hypot(x, z) < spawnRadiusBuffer);
+      return new THREE.Vector3(x, 0, z);
+    };
 
-      const trunk = new THREE.Mesh(
-        new THREE.BoxGeometry(1, trunkHeight, 1),
-        new THREE.MeshPhongMaterial({ color: "#000000" }),
-      );
-      trunk.position.set(x, trunkHeight / 2, z);
-      scene.add(trunk);
-
-      const canopyCount = 2 + Math.floor(Math.random() * 3);
-
-      for (let j = 0; j < canopyCount; j++) {
-        const size = 2 + Math.random() * 1.5;
-
-        const canopy = new THREE.Mesh(
-          new THREE.BoxGeometry(size, size, size),
-          new THREE.MeshPhongMaterial({ color: "#1FAF1F" }),
+    const addRock = (count: number) => {
+      for (let i = 0; i < count; i++) {
+        const radius = 0.8 + Math.random() * 1.8;
+        const rock = new THREE.Mesh(
+          new THREE.DodecahedronGeometry(radius, 0),
+          new THREE.MeshStandardMaterial({
+            color: new THREE.Color().setHSL(
+              0.08,
+              0.25,
+              0.3 + Math.random() * 0.1,
+            ),
+            roughness: 1,
+            metalness: 0.05,
+          }),
         );
-
-        canopy.position.set(
-          x + (Math.random() - 0.5) * 1.5,
-          trunkHeight + size / 2 + Math.random() * 1.2,
-          z + (Math.random() - 0.5) * 1.5,
-        );
-
-        scene.add(canopy);
+        const pos = randomXZ();
+        rock.position.copy(pos);
+        rock.rotation.y = Math.random() * Math.PI;
+        rock.castShadow = true;
+        rock.receiveShadow = true;
+        obstacleGroup.add(rock);
       }
-    }
+    };
+
+    const addTree = (count: number) => {
+      for (let i = 0; i < count; i++) {
+        const height = 4 + Math.random() * 3.5;
+        const trunkRadius = 0.18 + Math.random() * 0.08;
+        const canopyHeight = height * 0.75;
+        const trunk = new THREE.Mesh(
+          new THREE.CylinderGeometry(
+            trunkRadius * 0.85,
+            trunkRadius * 1.05,
+            height * 0.35,
+            12,
+          ),
+          new THREE.MeshStandardMaterial({
+            color: "#5a3b1e",
+            roughness: 0.8,
+            metalness: 0.05,
+          }),
+        );
+        const canopy = new THREE.Mesh(
+          new THREE.ConeGeometry(trunkRadius * 3.4, canopyHeight, 12),
+          new THREE.MeshStandardMaterial({
+            color: new THREE.Color().setHSL(
+              0.32,
+              0.6,
+              0.28 + Math.random() * 0.05,
+            ),
+            roughness: 0.58,
+            metalness: 0.05,
+          }),
+        );
+        const pos = randomXZ();
+        trunk.position.copy(pos);
+        trunk.position.y = (height * 0.35) / 2;
+        canopy.position.copy(pos);
+        canopy.position.y = height * 0.35 + canopyHeight / 2;
+
+        trunk.castShadow = true;
+        trunk.receiveShadow = true;
+        canopy.castShadow = true;
+        canopy.receiveShadow = true;
+
+        obstacleGroup.add(trunk);
+        obstacleGroup.add(canopy);
+      }
+    };
+
+    const addCrate = (count: number) => {
+      for (let i = 0; i < count; i++) {
+        const size = 1 + Math.random() * 0.8;
+        const crate = new THREE.Mesh(
+          new THREE.BoxGeometry(size, size, size),
+          new THREE.MeshStandardMaterial({
+            color: "#8a5a2d",
+            roughness: 0.7,
+            metalness: 0.05,
+          }),
+        );
+        const pos = randomXZ();
+        crate.position.copy(pos);
+        crate.position.y = size / 2;
+        crate.rotation.y = Math.random() * Math.PI;
+        crate.castShadow = true;
+        crate.receiveShadow = true;
+        obstacleGroup.add(crate);
+      }
+    };
+
+    const addLog = (count: number) => {
+      for (let i = 0; i < count; i++) {
+        const length = 2.5 + Math.random() * 2;
+        const radius = 0.25 + Math.random() * 0.2;
+        const log = new THREE.Mesh(
+          new THREE.CylinderGeometry(radius, radius * 1.05, length, 12),
+          new THREE.MeshStandardMaterial({
+            color: "#5c3b1f",
+            roughness: 0.85,
+            metalness: 0.02,
+          }),
+        );
+        const pos = randomXZ();
+        log.position.copy(pos);
+        log.position.y = radius;
+        log.rotation.set(
+          Math.random() * 0.3,
+          Math.random() * Math.PI,
+          Math.random() * 0.1,
+        );
+        log.castShadow = true;
+        log.receiveShadow = true;
+        obstacleGroup.add(log);
+      }
+    };
+
+    const addShrub = (count: number) => {
+      for (let i = 0; i < count; i++) {
+        const size = 0.6 + Math.random() * 0.6;
+        const shrub = new THREE.Mesh(
+          new THREE.SphereGeometry(size, 12, 10),
+          new THREE.MeshStandardMaterial({
+            color: new THREE.Color().setHSL(
+              0.33,
+              0.65,
+              0.32 + Math.random() * 0.08,
+            ),
+            roughness: 0.7,
+            metalness: 0.05,
+          }),
+        );
+        const pos = randomXZ();
+        shrub.position.copy(pos);
+        shrub.position.y = size * 0.7;
+        shrub.scale.setScalar(0.95 + Math.random() * 0.35);
+        shrub.castShadow = true;
+        shrub.receiveShadow = true;
+        obstacleGroup.add(shrub);
+      }
+    };
+
+    const addLowWall = (segments: number) => {
+      for (let i = 0; i < segments; i++) {
+        const length = 3 + Math.random() * 3;
+        const height = 0.8 + Math.random() * 0.5;
+        const depth = 0.5 + Math.random() * 0.2;
+        const wall = new THREE.Mesh(
+          new THREE.BoxGeometry(length, height, depth),
+          new THREE.MeshStandardMaterial({
+            color: "#b6b0a5",
+            roughness: 0.9,
+            metalness: 0,
+          }),
+        );
+        const pos = randomXZ();
+        wall.position.copy(pos);
+        wall.position.y = height / 2;
+        wall.rotation.y = Math.random() * Math.PI;
+        wall.castShadow = true;
+        wall.receiveShadow = true;
+        obstacleGroup.add(wall);
+      }
+    };
+
+    addRock(18);
+    addCrate(14);
+    addLog(10);
+    addShrub(18);
+    addTree(20);
+    addLowWall(8);
 
     // ===== INPUT =====
     const keys = { w: false, s: false, a: false, d: false, space: false };
@@ -148,11 +367,26 @@ export default function DemoView() {
       renderer.domElement.requestPointerLock();
     };
 
+    const handleResize = () => {
+      const { width, height } = getSize();
+      renderer.setSize(width, height);
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+    };
+
+    const handleFullscreenChange = () => {
+      setIsFullscreen(Boolean(document.fullscreenElement));
+      handleResize();
+    };
+
+    window.addEventListener("resize", handleResize);
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+
     // ===== MOVEMENT (now with jump!) =====
     const velocity = new THREE.Vector3();
 
     // 기존: 0.12 → 절반
-    const accel = 0.03;
+    const accel = 0.007;
 
     // 기존: 0.88 (마찰은 그대로 둬도 됨)
     const friction = 0.88;
@@ -163,6 +397,12 @@ export default function DemoView() {
     const jumpPower = 0.3; // 기존 0.45 → 0.225
 
     let onGround = true;
+    let rollOffset = 0;
+    let pitchSwayOffset = 0;
+    let bobPhase = 0;
+    let rollBobOffset = 0;
+    let pitchBobOffset = 0;
+    let bobOffset = 0;
 
     // ===== LOOP =====
     function animate() {
@@ -178,6 +418,42 @@ export default function DemoView() {
 
       velocity.multiplyScalar(friction);
 
+      const speed = new THREE.Vector2(velocity.x, velocity.z).length();
+      const speedNorm = Math.min(speed / 0.25, 1);
+
+      const rightVel = velocity.dot(right.clone().normalize());
+      const forwardVel = velocity.dot(forward.clone().normalize());
+      const targetRoll = THREE.MathUtils.clamp(-rightVel * 0.625, -0.02, 0.02);
+      const targetPitchSway = THREE.MathUtils.clamp(
+        forwardVel * -0.45,
+        -0.0125,
+        0.0125,
+      );
+
+      bobPhase += speed * 3.5;
+      const targetRollBob = Math.sin(bobPhase) * 0.008 * speedNorm;
+      const targetPitchBob =
+        Math.sin(bobPhase + Math.PI / 2) * 0.015 * speedNorm;
+      const targetBob = Math.sin(bobPhase) * 0.03 * speedNorm;
+
+      rollOffset = THREE.MathUtils.lerp(rollOffset, targetRoll, 0.16);
+      pitchSwayOffset = THREE.MathUtils.lerp(
+        pitchSwayOffset,
+        targetPitchSway,
+        0.16,
+      );
+      rollBobOffset = THREE.MathUtils.lerp(rollBobOffset, targetRollBob, 0.22);
+      pitchBobOffset = THREE.MathUtils.lerp(
+        pitchBobOffset,
+        targetPitchBob,
+        0.22,
+      );
+      bobOffset = THREE.MathUtils.lerp(bobOffset, targetBob, 0.25);
+
+      camera.rotation.z = rollOffset + rollBobOffset;
+      camera.rotation.x = pitchSwayOffset + pitchBobOffset;
+      camera.position.y = bobOffset;
+
       // ===== JUMP =====
       if (keys.space && onGround) {
         verticalVel = jumpPower;
@@ -187,13 +463,6 @@ export default function DemoView() {
       // Apply gravity
       verticalVel += gravity;
       yawGroup.position.y += verticalVel;
-
-      // Hit the ground
-      if (yawGroup.position.y <= 2) {
-        yawGroup.position.y = 2;
-        verticalVel = 0;
-        onGround = true;
-      }
 
       // Horizontal movement
       yawGroup.position.add(new THREE.Vector3(velocity.x, 0, velocity.z));
@@ -208,12 +477,23 @@ export default function DemoView() {
         Math.min(AREA - 1, yawGroup.position.z),
       );
 
+      // Ground clamp
+      if (yawGroup.position.y <= 2) {
+        yawGroup.position.y = 2;
+        verticalVel = 0;
+        onGround = true;
+      } else {
+        onGround = false;
+      }
+
       renderer.render(scene, camera);
     }
 
     animate();
 
     return () => {
+      window.removeEventListener("resize", handleResize);
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
       mountRef.current?.removeChild(renderer.domElement);
     };
   }, []);
@@ -221,7 +501,43 @@ export default function DemoView() {
   return (
     <div
       ref={mountRef}
-      style={{ width: "800px", height: "600px", background: "#87CEEB" }}
-    />
+      style={{
+        position: "relative",
+        width: isFullscreen ? "100vw" : "800px",
+        height: isFullscreen ? "100vh" : "640px",
+        background: "#87CEEB",
+        borderRadius: "12px",
+        overflow: "hidden",
+        boxShadow: "0 20px 40px rgba(0,0,0,0.35)",
+      }}
+    >
+      {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
+      <button
+        onClick={() => {
+          if (!mountRef.current) return;
+          if (document.fullscreenElement) {
+            document.exitFullscreen().catch(() => {});
+          } else {
+            mountRef.current.requestFullscreen?.().catch(() => {});
+          }
+        }}
+        style={{
+          position: "absolute",
+          top: 12,
+          right: 12,
+          zIndex: 2,
+          padding: "8px 12px",
+          borderRadius: 8,
+          border: "1px solid rgba(255,255,255,0.25)",
+          background: "rgba(20,22,35,0.55)",
+          color: "#f5f5f5",
+          cursor: "pointer",
+          fontWeight: 600,
+          backdropFilter: "blur(6px)",
+        }}
+      >
+        {isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+      </button>
+    </div>
   );
 }
