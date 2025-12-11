@@ -2,14 +2,10 @@ import { graphql, useStaticQuery } from "gatsby";
 import { useI18next, useTranslation } from "gatsby-plugin-react-i18next";
 
 type SeoProps = {
-  titleKey?: string;
   descriptionKey?: string;
 };
 
-export default function Seo({
-  titleKey = "seo.title",
-  descriptionKey = "seo.description",
-}: SeoProps) {
+export default function Seo({ descriptionKey = "brand.subtitle" }: SeoProps) {
   const { language } = useI18next();
   const { t } = useTranslation();
   const data = useStaticQuery<{
@@ -25,11 +21,11 @@ export default function Seo({
     }
   `);
 
-  const title = t(titleKey);
+  const title = "Dizzy-Shield";
   const description = t(descriptionKey);
   const keywords = t("seo.keywords", { defaultValue: "" });
   const siteTitle = data.site?.siteMetadata?.title ?? "Dizzy-Shield";
-  const siteUrl = data.site?.siteMetadata?.siteUrl ?? "";
+  const siteUrl = window.location.origin;
   const image = `${siteUrl}/favicon.ico`;
 
   return (
@@ -46,7 +42,7 @@ export default function Seo({
       <meta name="twitter:card" content="summary" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
-      <link rel="icon" href="/favicon.ico" />
+      <link rel="icon" href={image} />
     </>
   );
 }

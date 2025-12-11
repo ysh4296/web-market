@@ -22,7 +22,6 @@ const COLORS = [
   { key: "blue", value: "#3b82f6" },
 ] as const;
 
-
 function hexToRgba(hex: string, alpha: number) {
   const parsed = hex.replace("#", "");
   const r = Number.parseInt(parsed.slice(0, 2), 16);
@@ -56,7 +55,6 @@ export default function DemoPanel() {
 
   return (
     <Box
-      ref={ref}
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -67,6 +65,7 @@ export default function DemoPanel() {
       }}
     >
       <Typography
+        ref={ref}
         variant="h4"
         sx={{
           animation: inView ? `${fadeUp} .6s ease-out` : "none",
@@ -280,5 +279,3 @@ export default function DemoPanel() {
     </Box>
   );
 }
-
-

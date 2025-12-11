@@ -43,7 +43,7 @@ const theme = createTheme({
   },
 });
 
-export default function AntiMotionSicknessLanding() {
+export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <main
@@ -86,9 +86,7 @@ export default function AntiMotionSicknessLanding() {
   );
 }
 
-export const Head = () => (
-  <Seo titleKey="seo.title" descriptionKey="seo.description" />
-);
+export const Head = () => <Seo descriptionKey="seo.description" />;
 
 export const query = graphql`
   query ($language: String!) {

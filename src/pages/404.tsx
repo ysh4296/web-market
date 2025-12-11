@@ -23,7 +23,13 @@ const NotFoundPage = () => {
 
   return (
     <main style={pageStyles}>
-      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 24 }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          marginBottom: 24,
+        }}
+      >
         <LanguageSwitcher />
       </div>
       <h1 style={headingStyles}>{t("notFound.title")}</h1>
@@ -46,7 +52,7 @@ const NotFoundPage = () => {
 
 export default NotFoundPage;
 
-export const Head: HeadFC = () => <Seo titleKey="notFound.headTitle" descriptionKey="notFound.message" />;
+export const Head: HeadFC = () => <Seo descriptionKey="notFound.message" />;
 
 export const query = graphql`
   query ($language: String!) {
