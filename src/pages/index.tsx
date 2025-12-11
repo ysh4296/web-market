@@ -1,6 +1,7 @@
 ﻿import { Box, Divider, ThemeProvider, createTheme } from "@mui/material";
 import { graphql } from "gatsby";
 import LanguageSwitcher from "@components/LanguageSwitcher";
+import Seo from "@components/Seo";
 import BrandingView from "@views/BrandingView";
 import DemoPanel from "@views/DemoPanel";
 import DescriptionView from "@views/DescriptionView";
@@ -84,6 +85,10 @@ export default function AntiMotionSicknessLanding() {
     </ThemeProvider>
   );
 }
+
+export const Head = () => (
+  <Seo titleKey="seo.title" descriptionKey="seo.description" />
+);
 
 export const query = graphql`
   query ($language: String!) {

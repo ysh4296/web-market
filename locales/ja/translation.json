@@ -49,5 +49,10 @@
     "hint": "src/pages/ にページを作成してみてください。",
     "home": "ホームに戻る",
     "headTitle": "見つかりません"
+  },
+  "seo": {
+    "title": "Dizzy-Shield | 酔い軽減UIデモ",
+    "description": "3Dゲームの酔いを抑えるバランス補助HUDとオーバーレイを試してください。色・透明度・全画面を調整し、自分に合った設定を見つけましょう。",
+    "keywords": "酔い, ゲームUI, HUD, オーバーレイ, 3D, Dizzy-Shield"
   }
 }

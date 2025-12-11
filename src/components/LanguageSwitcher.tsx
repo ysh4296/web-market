@@ -1,5 +1,6 @@
 import { Box, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 import { useI18next } from "gatsby-plugin-react-i18next";
+import { useEffect, useRef } from "react";
 
 const LANGUAGE_LABELS: Record<string, string> = {
   ko: "한국어",
@@ -11,6 +12,25 @@ const LANGUAGE_LABELS: Record<string, string> = {
 
 export default function LanguageSwitcher() {
   const { language, languages, changeLanguage } = useI18next();
+  const didSetFromBrowser = useRef(false);
+
+  // 초기 렌더에서 브라우저 기본 언어를 반영해 기본값을 맞춤
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (didSetFromBrowser.current) return;
+
+    let browserLang;
+    if (language === undefined) browserLang = navigator.language.split("-")[0];
+
+    if (
+      browserLang &&
+      languages.includes(browserLang) &&
+      browserLang !== language
+    ) {
+      didSetFromBrowser.current = true;
+      changeLanguage(browserLang);
+    }
+  }, [changeLanguage, language, languages]);
 
   return (
     <Box sx={{ minWidth: 140 }}>

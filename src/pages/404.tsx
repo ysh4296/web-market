@@ -1,6 +1,7 @@
 ﻿import { type HeadFC, Link, graphql } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import LanguageSwitcher from "@components/LanguageSwitcher";
+import Seo from "@components/Seo";
 
 const pageStyles = {
   color: "#232129",
@@ -45,10 +46,7 @@ const NotFoundPage = () => {
 
 export default NotFoundPage;
 
-export const Head: HeadFC = () => {
-  const { t } = useTranslation();
-  return <title>{t("notFound.headTitle")}</title>;
-};
+export const Head: HeadFC = () => <Seo titleKey="notFound.headTitle" descriptionKey="notFound.message" />;
 
 export const query = graphql`
   query ($language: String!) {

@@ -49,5 +49,10 @@
     "hint": "Prueba a crear una página en src/pages/.",
     "home": "Volver al inicio",
     "headTitle": "No encontrado"
+  },
+  "seo": {
+    "title": "Dizzy-Shield | Demo de UI anti-mareo",
+    "description": "Prueba el HUD y la superposición que reducen el mareo en juegos 3D. Ajusta colores, opacidad y pantalla completa para encontrar la configuración que te conviene.",
+    "keywords": "mareo, UI de juego, HUD, superposición, 3D, Dizzy-Shield"
   }
 }
