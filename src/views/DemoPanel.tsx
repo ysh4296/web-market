@@ -1,4 +1,4 @@
-import {
+﻿import {
   Box,
   Button,
   FormControl,
@@ -8,18 +8,20 @@ import {
   RadioGroup,
   Typography,
 } from "@mui/material";
-import { useMemo, useRef, useState } from "react";
+import useInView from "@hooks/useInView";
 import DemoView from "@views/DemoView";
 import { fadeUp } from "@utils/keyFrames";
-import useInView from "@hooks/useInView";
+import { useTranslation } from "gatsby-plugin-react-i18next";
+import { useMemo, useRef, useState } from "react";
 
 const COLORS = [
-  { label: "빨강", value: "#ef4444" },
-  { label: "주황", value: "#f97316" },
-  { label: "노랑", value: "#facc15" },
-  { label: "초록", value: "#22c55e" },
-  { label: "파랑", value: "#3b82f6" },
+  { key: "red", value: "#ef4444" },
+  { key: "orange", value: "#f97316" },
+  { key: "yellow", value: "#facc15" },
+  { key: "green", value: "#22c55e" },
+  { key: "blue", value: "#3b82f6" },
 ] as const;
+
 
 function hexToRgba(hex: string, alpha: number) {
   const parsed = hex.replace("#", "");
@@ -30,6 +32,7 @@ function hexToRgba(hex: string, alpha: number) {
 }
 
 export default function DemoPanel() {
+  const { t } = useTranslation();
   const { ref, inView } = useInView({ threshold: 0.5 });
 
   const [color, setColor] = useState<string>(COLORS[0].value);
@@ -70,7 +73,7 @@ export default function DemoPanel() {
           opacity: inView ? 1 : 0,
         }}
       >
-        데모
+        {t("demo.title")}
       </Typography>
       <Typography
         variant="body1"
@@ -81,8 +84,7 @@ export default function DemoPanel() {
           lineHeight: 1.7,
         }}
       >
-        오버레이 색상과 표시 여부를 바꿔 보면서 멀미 완화 UI가 어떻게 보이는지
-        확인해 보세요. 패널을 클릭해 조작하면 게임 키 입력을 잠시 막아줍니다.
+        {t("demo.description")}
       </Typography>
 
       <Paper
@@ -114,7 +116,7 @@ export default function DemoPanel() {
         >
           <Box sx={{ flex: "1 1 320px", minWidth: 260 }}>
             <Typography variant="subtitle1" sx={{ mb: 1 }}>
-              색상 선택
+              {t("demo.colorPicker")}
             </Typography>
             <FormControl>
               <RadioGroup
@@ -134,7 +136,7 @@ export default function DemoPanel() {
                         }}
                       />
                     }
-                    label={c.label}
+                    label={t(`demo.colors.${c.key}`)}
                   />
                 ))}
               </RadioGroup>
@@ -152,7 +154,7 @@ export default function DemoPanel() {
           >
             <Box sx={{ flex: "1 1 140px" }}>
               <Typography variant="subtitle1" sx={{ mb: 1 }}>
-                오버레이 표시
+                {t("demo.overlay.label")}
               </Typography>
               <Button
                 variant="outlined"
@@ -164,13 +166,13 @@ export default function DemoPanel() {
                   "&:hover": { borderColor: "rgba(255,255,255,0.5)" },
                 }}
               >
-                {showOverlay ? "숨기기" : "보이기"}
+                {t(showOverlay ? "demo.overlay.hide" : "demo.overlay.show")}
               </Button>
             </Box>
 
             <Box sx={{ flex: "1 1 160px" }}>
               <Typography variant="subtitle1" sx={{ mb: 1 }}>
-                전체 화면
+                {t("demo.fullscreen.label")}
               </Typography>
               <Button
                 variant="contained"
@@ -190,7 +192,11 @@ export default function DemoPanel() {
                   "&:hover": { borderColor: "rgba(255,255,255,0.5)" },
                 }}
               >
-                {isFullscreen ? "종료" : "켜기"}
+                {t(
+                  isFullscreen
+                    ? "demo.fullscreen.exit"
+                    : "demo.fullscreen.enter",
+                )}
               </Button>
             </Box>
           </Box>
@@ -274,3 +280,5 @@ export default function DemoPanel() {
     </Box>
   );
 }
+
+

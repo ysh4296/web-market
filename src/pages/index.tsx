@@ -1,14 +1,15 @@
-import { ThemeProvider, createTheme, Divider } from "@mui/material";
+﻿import { Box, Divider, ThemeProvider, createTheme } from "@mui/material";
+import { graphql } from "gatsby";
+import LanguageSwitcher from "@components/LanguageSwitcher";
 import BrandingView from "@views/BrandingView";
 import DemoPanel from "@views/DemoPanel";
 import DescriptionView from "@views/DescriptionView";
 import FooterView from "@views/FooterView";
 
-// MUI 다크 테마 설정
 const theme = createTheme({
   palette: {
     mode: "dark",
-    primary: { main: "#6366f1" }, // indigo
+    primary: { main: "#6366f1" },
     grey: { 200: "#cbd5e1", 300: "#94a3b8", 700: "#334155" },
     background: { default: "#0a1124ff", paper: "#1e293b" },
   },
@@ -54,7 +55,18 @@ export default function AntiMotionSicknessLanding() {
           background: theme.palette.background.default,
         }}
       >
-        {/* Hero Section */}
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "flex-end",
+            px: { xs: 2, md: 4 },
+            pt: { xs: 2, md: 3 },
+          }}
+        >
+          <LanguageSwitcher />
+        </Box>
+
         <BrandingView />
 
         <Divider sx={{ width: "100%", opacity: 0.1 }} />
@@ -63,14 +75,26 @@ export default function AntiMotionSicknessLanding() {
 
         <Divider sx={{ width: "100%", opacity: 0.1 }} />
 
-        {/* Demo Section */}
         <DemoPanel />
 
         <Divider sx={{ width: "100%", opacity: 0.1 }} />
 
-        {/* Footer */}
         <FooterView />
       </main>
     </ThemeProvider>
   );
 }
+
+export const query = graphql`
+  query ($language: String!) {
+    locales: allLocale(filter: { language: { eq: $language } }) {
+      edges {
+        node {
+          ns
+          data
+          language
+        }
+      }
+    }
+  }
+`;

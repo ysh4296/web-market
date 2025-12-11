@@ -1,0 +1,53 @@
+{
+  "brand": {
+    "title": "Dizzy-Shield",
+    "subtitle": "Reduce el mareo en juegos con una UI que ayuda al equilibrio",
+    "cta": "Probarlo",
+    "iconAlt": "Ícono anti-mareo"
+  },
+  "demo": {
+    "title": "Demostración",
+    "description": "Cambia el color y la visibilidad de la superposición para ver cómo se ve la UI anti-mareo. En pantalla completa sentirás el efecto con más claridad.",
+    "colorPicker": "Selección de color",
+    "colors": {
+      "red": "Rojo",
+      "orange": "Naranja",
+      "yellow": "Amarillo",
+      "green": "Verde",
+      "blue": "Azul"
+    },
+    "overlay": {
+      "label": "Mostrar superposición",
+      "show": "Mostrar",
+      "hide": "Ocultar"
+    },
+    "fullscreen": {
+      "label": "Pantalla completa",
+      "enter": "Activar",
+      "exit": "Salir"
+    }
+  },
+  "description": {
+    "title": "¿Por qué nos mareamos?",
+    "body": "En juegos 3D, cuando la cámara gira rápido o la pantalla vibra, el cerebro percibe un desajuste entre la vista y el equilibrio. Ese pequeño desajuste acumulado hace que pierdas orientación y sientas mareo o fatiga. Se necesita una ayuda visual que mantenga un punto de referencia estable incluso en escenas con sacudidas.",
+    "cardTitle": "Así lo resolvemos",
+    "item1": {
+      "title": "HUD fijo en el centro",
+      "body": "Un punto de referencia estable en el centro evita perder la orientación durante giros o balanceos bruscos."
+    },
+    "item2": {
+      "title": "Ajuste de layout",
+      "body": "Ajusta tamaño, color y opacidad para quedarte con el layout que mejor te funcione."
+    }
+  },
+  "footer": {
+    "credit": "© {{year}} Dizzy-Shield. Creado por cadi."
+  },
+  "notFound": {
+    "title": "Página no encontrada",
+    "message": "Lo sentimos, no pudimos encontrar lo que buscabas.",
+    "hint": "Prueba a crear una página en src/pages/.",
+    "home": "Volver al inicio",
+    "headTitle": "No encontrado"
+  }
+}

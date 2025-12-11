@@ -1,0 +1,53 @@
+{
+  "brand": {
+    "title": "Dizzy-Shield",
+    "subtitle": "用平衡辅助 UI 降低游戏眩晕",
+    "cta": "立即体验",
+    "iconAlt": "防眩晕图标"
+  },
+  "demo": {
+    "title": "演示",
+    "description": "切换叠加层的颜色和显示，看看防眩晕 UI 的效果。全屏模式能更直观地感受差异。",
+    "colorPicker": "颜色选择",
+    "colors": {
+      "red": "红色",
+      "orange": "橙色",
+      "yellow": "黄色",
+      "green": "绿色",
+      "blue": "蓝色"
+    },
+    "overlay": {
+      "label": "叠加层显示",
+      "show": "显示",
+      "hide": "隐藏"
+    },
+    "fullscreen": {
+      "label": "全屏",
+      "enter": "开启",
+      "exit": "退出"
+    }
+  },
+  "description": {
+    "title": "为什么会眩晕？",
+    "body": "在 3D 游戏里，镜头快速旋转或画面抖动会让大脑感到视觉和平衡的不匹配。这个小小的落差累积后，会让人失去方向感、头晕或疲劳。需要一种视觉辅助，即使在晃动场景也能提供稳定的参照点。",
+    "cardTitle": "我们的解决方式",
+    "item1": {
+      "title": "中心固定 HUD",
+      "body": "在画面中心放置稳定的基准点，即使急转或滚动也不容易失去方向感。"
+    },
+    "item2": {
+      "title": "布局调节",
+      "body": "调整大小、颜色和透明度，找到最适合你的布局。"
+    }
+  },
+  "footer": {
+    "credit": "© {{year}} Dizzy-Shield。由 cadi 制作。"
+  },
+  "notFound": {
+    "title": "页面未找到",
+    "message": "抱歉，未找到您要的内容。",
+    "hint": "可以在 src/pages/ 中创建一个页面试试。",
+    "home": "返回首页",
+    "headTitle": "未找到"
+  }
+}

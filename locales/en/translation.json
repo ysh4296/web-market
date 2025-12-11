@@ -1,0 +1,53 @@
+{
+  "brand": {
+    "title": "Dizzy-Shield",
+    "subtitle": "Reduce game motion sickness with a balance-assist UI",
+    "cta": "Try it",
+    "iconAlt": "Anti-motion-sickness icon"
+  },
+  "demo": {
+    "title": "Demo",
+    "description": "Switch overlay colors and visibility to see how the motion-sickness relief UI looks. Go fullscreen to feel the effect more clearly.",
+    "colorPicker": "Color selection",
+    "colors": {
+      "red": "Red",
+      "orange": "Orange",
+      "yellow": "Yellow",
+      "green": "Green",
+      "blue": "Blue"
+    },
+    "overlay": {
+      "label": "Overlay display",
+      "show": "Show",
+      "hide": "Hide"
+    },
+    "fullscreen": {
+      "label": "Fullscreen",
+      "enter": "Enter",
+      "exit": "Exit"
+    }
+  },
+  "description": {
+    "title": "Why do we get motion sick?",
+    "body": "In 3D games, fast camera spins or screen shake make the brain sense a mismatch between vision and balance. As that mismatch stacks up, you lose orientation and feel dizzy or tired. To fix it, you need visual aids that keep a stable reference point even in shaky scenes.",
+    "cardTitle": "How we solve it",
+    "item1": {
+      "title": "Centralized HUD anchor",
+      "body": "A steady reference at the center of the screen helps you keep direction during sharp turns or rolls."
+    },
+    "item2": {
+      "title": "Layout tuning",
+      "body": "Adjust size, color, and opacity to get the layout that fits you best."
+    }
+  },
+  "footer": {
+    "credit": "© {{year}} Dizzy-Shield. Crafted by cadi."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "message": "Sorry, we couldn't find what you were looking for.",
+    "hint": "Try creating a page in src/pages/.",
+    "home": "Go home",
+    "headTitle": "Not found"
+  }
+}

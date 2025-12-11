@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+﻿import { useEffect, useRef, useState, type ReactNode } from "react";
 import * as THREE from "three";
+import { useTranslation } from "gatsby-plugin-react-i18next";
 
 type DemoViewProps = {
   showFullscreenButton?: boolean;
@@ -16,6 +17,7 @@ export default function DemoView({
   onFullscreenChange,
   inputsDisabled = false,
 }: DemoViewProps) {
+  const { t } = useTranslation();
   const [isFullscreen, setIsFullscreen] = useState(false);
   const mountRef = useRef<HTMLDivElement>(null);
 
@@ -412,16 +414,16 @@ export default function DemoView({
     // ===== MOVEMENT (now with jump!) =====
     const velocity = new THREE.Vector3();
 
-    // 기존: 0.12 → 절반
+    // 湲곗〈: 0.12 ???덈컲
     const accel = 0.007;
 
-    // 기존: 0.88 (마찰은 그대로 둬도 됨)
+    // 湲곗〈: 0.88 (留덉같? 洹몃?濡??щ룄 ??
     const friction = 0.88;
 
-    // 점프 및 중력도 절반
+    // ?먰봽 諛?以묐젰???덈컲
     let verticalVel = 0;
-    const gravity = -0.005; // 기존 -0.02 → -0.01
-    const jumpPower = 0.3; // 기존 0.45 → 0.225
+    const gravity = -0.005; // 湲곗〈 -0.02 ??-0.01
+    const jumpPower = 0.3; // 湲곗〈 0.45 ??0.225
 
     let onGround = true;
     let rollOffset = 0;
@@ -591,9 +593,10 @@ export default function DemoView({
             backdropFilter: "blur(6px)",
           }}
         >
-          {isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+          {isFullscreen ? t("demo.fullscreen.exit") : t("demo.fullscreen.enter")}
         </button>
       )}
     </div>
   );
 }
+

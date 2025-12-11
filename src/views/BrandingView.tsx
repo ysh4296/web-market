@@ -1,9 +1,12 @@
-import { Box, Container, Typography } from "@mui/material";
-import dizzyShield from "@images/dizzy-shield.ico";
+﻿import { Box, Container, Typography } from "@mui/material";
+import { useTranslation } from "gatsby-plugin-react-i18next";
 import ShineButton from "@components/ShineButton";
-import { pulseGlow, popIn, fadeUp } from "@utils/keyFrames";
+import dizzyShield from "@images/dizzy-shield.ico";
+import { fadeUp, popIn, pulseGlow } from "@utils/keyFrames";
 
 const BrandingView = () => {
+  const { t } = useTranslation();
+
   return (
     <Box
       component="section"
@@ -18,11 +21,10 @@ const BrandingView = () => {
         maxWidth: "1200px",
       }}
     >
-      {/* 아이콘 */}
       <Box
         component="img"
         src={dizzyShield}
-        alt="멀미 안정 아이콘"
+        alt={t("brand.iconAlt")}
         sx={{
           width: 120,
           height: 120,
@@ -37,7 +39,6 @@ const BrandingView = () => {
         }}
       />
 
-      {/* 텍스트 영역 */}
       <Container sx={{ maxWidth: 720, mt: 30, textAlign: "start" }}>
         <Typography
           variant="h1"
@@ -49,7 +50,7 @@ const BrandingView = () => {
             animationFillMode: "forwards",
           }}
         >
-          Dizzy-Shield
+          {t("brand.title")}
         </Typography>
 
         <Typography
@@ -65,11 +66,10 @@ const BrandingView = () => {
             animationFillMode: "forwards",
           }}
         >
-          균형 보조 UI를 통해 게임 멀미를 줄이세요
+          {t("brand.subtitle")}
         </Typography>
       </Container>
 
-      {/* 버튼 */}
       <Box
         sx={{
           mt: 8,
@@ -79,7 +79,7 @@ const BrandingView = () => {
           animationFillMode: "forwards",
         }}
       >
-        <ShineButton>지금 체험하기</ShineButton>
+        <ShineButton>{t("brand.cta")}</ShineButton>
       </Box>
     </Box>
   );

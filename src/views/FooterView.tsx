@@ -1,6 +1,9 @@
-import { Typography } from "@mui/material";
+﻿import { Typography } from "@mui/material";
+import { useTranslation } from "gatsby-plugin-react-i18next";
 
 const FooterView = () => {
+  const { t } = useTranslation();
+
   return (
     <footer
       style={{
@@ -11,7 +14,7 @@ const FooterView = () => {
       }}
     >
       <Typography sx={{ color: "grey.500" }}>
-        © {new Date().getFullYear()} Dizzy-Shield. Crafted by cadi.
+        {t("footer.credit", { year: new Date().getFullYear() })}
       </Typography>
     </footer>
   );
