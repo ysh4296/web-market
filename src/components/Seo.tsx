@@ -3,11 +3,15 @@ import { useI18next, useTranslation } from "gatsby-plugin-react-i18next";
 
 type SeoProps = {
   descriptionKey?: string;
+  titleKey?: string;
 };
 
-export default function Seo({ descriptionKey = "brand.subtitle" }: SeoProps) {
+export default function Seo({
+  descriptionKey = "description",
+  titleKey = "title",
+}: SeoProps) {
   const { language } = useI18next();
-  const { t } = useTranslation();
+  const { t } = useTranslation(["seo", "translation"]);
   const data = useStaticQuery<{
     site: { siteMetadata: { title?: string; siteUrl?: string } | null };
   }>(graphql`
@@ -21,12 +25,12 @@ export default function Seo({ descriptionKey = "brand.subtitle" }: SeoProps) {
     }
   `);
 
-  const title = "Dizzy-Shield";
-  const description = t(descriptionKey);
-  const keywords = t("seo.keywords", { defaultValue: "" });
   const siteTitle = data.site?.siteMetadata?.title ?? "Dizzy-Shield";
   const siteUrl = data.site?.siteMetadata?.siteUrl ?? "";
   const image = `${siteUrl}/favicon.ico`;
+  const title = t(titleKey, { ns: "seo", defaultValue: siteTitle });
+  const description = t(descriptionKey, { ns: "seo", defaultValue: siteTitle });
+  const keywords = t("keywords", { ns: "seo", defaultValue: "" });
 
   return (
     <>

@@ -46,11 +46,11 @@ const config: GatsbyConfig = {
         siteUrl: "https://example.com",
         i18nextOptions: {
           supportedLngs: ["ko", "en", "ja", "es", "zh"],
+          ns: ["translation", "seo"],
+          defaultNS: "translation",
           interpolation: {
             escapeValue: false,
           },
-          defaultNS: "translation",
-          ns: ["translation"],
         },
       },
     },
