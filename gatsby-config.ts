@@ -15,10 +15,11 @@ const config: GatsbyConfig = {
       resolve: "gatsby-plugin-alias-imports",
       options: {
         alias: {
+          "@components": "src/components",
           "@views": "src/views",
           "@images": "src/images",
         },
-        extensions: ["ts", "tsx", "js", "jsx"],
+        extensions: [".ts", ".tsx", ".js", ".jsx"],
       },
     },
   ],

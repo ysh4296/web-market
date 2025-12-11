@@ -1,6 +1,7 @@
 import { Box, Container, Typography } from "@mui/material";
 import { keyframes } from "@mui/system";
 import dizzySheld from "@images/dizzy-shield.ico";
+import ShineButton from "@components/ShineButton";
 
 // float 애니메이션 (SSR-safe)
 const floatIcon = keyframes`
@@ -21,7 +22,6 @@ const BrandingView = () => {
         alignItems: "center",
         justifyContent: "center",
         textAlign: "center",
-        background: "linear-gradient(180deg, #0f172a 0%, #111827 100%)",
         position: "relative",
       }}
     >
@@ -54,6 +54,7 @@ const BrandingView = () => {
           시야 안정 레이아웃으로 방향감과 몰입감을 동시에 지킨다
         </Typography>
       </Container>
+      <ShineButton>지금 체험하기</ShineButton>
     </Box>
   );
 };

@@ -16,10 +16,34 @@ const theme = createTheme({
     mode: "dark",
     primary: { main: "#6366f1" }, // indigo
     grey: { 200: "#cbd5e1", 300: "#94a3b8", 700: "#334155" },
-    background: { default: "#0f172a", paper: "#1e293b" },
+    background: { default: "#0a1124ff", paper: "#1e293b" },
   },
   typography: {
     fontFamily: `"Inter", "Pretendard", sans-serif`,
+    h1: {
+      color: "#f1f5f9",
+    },
+    h2: {
+      color: "#f1f5f9",
+    },
+    h3: {
+      color: "#e2e8f0",
+    },
+    h4: {
+      color: "#e2e8f0",
+    },
+    h5: {
+      color: "#cbd5e1",
+    },
+    h6: {
+      color: "#cbd5e1",
+    },
+    body1: {
+      color: "#e2e8f0",
+    },
+    body2: {
+      color: "#cbd5e1",
+    },
   },
 });
 
@@ -167,66 +191,6 @@ export default function AntiMotionSicknessLanding() {
         </section>
 
         <Divider sx={{ width: "100%", opacity: 0.1 }} />
-
-        {/* 후기 */}
-        <section style={{ textAlign: "center", width: "100%" }}>
-          <Container maxWidth="md">
-            <Typography variant="h4" sx={{ mb: 3 }}>
-              사용자 후기
-            </Typography>
-
-            <Card sx={{ mb: 2 }}>
-              <Box p={3}>
-                <Typography variant="h6">
-                  “10분도 힘들었는데 이제 1시간은 거뜬하다.”
-                </Typography>
-                <Typography sx={{ color: "grey.400" }}>- 게이머 A</Typography>
-              </Box>
-            </Card>
-
-            <Card>
-              <Box p={3}>
-                <Typography variant="h6">
-                  “HUD 켜고 나서 방향감이 유지돼 집중도가 올라갔다.”
-                </Typography>
-                <Typography sx={{ color: "grey.400" }}>- 개발자 B</Typography>
-              </Box>
-            </Card>
-          </Container>
-        </section>
-
-        <Divider sx={{ width: "100%", opacity: 0.1 }} />
-
-        {/* CTA */}
-        <section
-          style={{ textAlign: "center", width: "100%", padding: "60px 0" }}
-        >
-          <Container maxWidth="md">
-            <Typography variant="h3" sx={{ mb: 1 }}>
-              지금 바로 체험해봐
-            </Typography>
-
-            <Typography sx={{ color: "grey.300" }}>
-              무료로 시작하고, 맞다면 프로 버전으로 업그레이드하자.
-            </Typography>
-
-            <Box
-              mt={3}
-              sx={{ display: "flex", gap: 2, justifyContent: "center" }}
-            >
-              <Button variant="contained" size="large">
-                무료 다운로드
-              </Button>
-              <Button variant="outlined" size="large">
-                설치 가이드
-              </Button>
-            </Box>
-
-            <Box mt={3}>
-              <ImagePlaceholder label="다운로드 안내 이미지" height={180} />
-            </Box>
-          </Container>
-        </section>
 
         {/* 푸터 */}
         <footer
