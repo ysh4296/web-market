@@ -52,11 +52,33 @@ const NotFoundPage = () => {
 
 export default NotFoundPage;
 
-export const Head: HeadFC = () => <Seo descriptionKey="notFound.message" />;
+export const Head: HeadFC<Queries.NotFoundPageQuery> = ({ data }) => {
+  const { t } = useTranslation(["seo"]);
+  const seoNode = data.locales.edges.find((edge) => edge.node.ns === "seo");
+
+  let seo: { title?: string; description?: string; keywords?: string } = {};
+  if (seoNode) {
+    try {
+      seo = JSON.parse(seoNode.node.data);
+    } catch {
+      // ignore parse errors
+    }
+  }
+
+  return (
+    <Seo
+      title={seo.title ?? t("title")}
+      description={seo.description ?? t("description")}
+      keywords={seo.keywords ?? t("keywords", { defaultValue: "" })}
+    />
+  );
+};
 
 export const query = graphql`
-  query ($language: String!) {
-    locales: allLocale(filter: { language: { eq: $language } }) {
+  query NotFoundPage($language: String!) {
+    locales: allLocale(
+      filter: { language: { eq: $language }, ns: { in: ["translation", "seo"] } }
+    ) {
       edges {
         node {
           ns

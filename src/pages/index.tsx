@@ -1,5 +1,6 @@
 ﻿import { Box, Divider, ThemeProvider, createTheme } from "@mui/material";
-import { graphql } from "gatsby";
+import { type HeadFC, graphql } from "gatsby";
+import { useTranslation } from "gatsby-plugin-react-i18next";
 import LanguageSwitcher from "@components/LanguageSwitcher";
 import Seo from "@components/Seo";
 import BrandingView from "@views/BrandingView";
@@ -86,11 +87,37 @@ export default function App() {
   );
 }
 
-export const Head = () => <Seo descriptionKey="seo.description" />;
+export const Head: HeadFC = ({
+  data,
+  pageContext,
+}: { data: any; pageContext: any }) => {
+  const { t } = useTranslation(["seo"]);
+  const seoNode = data.locales.edges.find((edge) => edge.node.ns === "seo");
+
+  let seo: { title?: string; description?: string; keywords?: string } = {};
+  if (seoNode) {
+    try {
+      seo = JSON.parse(seoNode.node.data);
+    } catch {
+      // ignore parse errors
+    }
+  }
+
+  return (
+    <Seo
+      title={seo.title ?? t("title")}
+      description={seo.description ?? t("description")}
+      keywords={seo.keywords ?? t("keywords", { defaultValue: "" })}
+      language={pageContext.language}
+    />
+  );
+};
 
 export const query = graphql`
-  query ($language: String!) {
-    locales: allLocale(filter: { language: { eq: $language } }) {
+  query IndexPage($language: String!) {
+    locales: allLocale(
+      filter: { language: { eq: $language }, ns: { in: ["translation", "seo"] } }
+    ) {
       edges {
         node {
           ns
