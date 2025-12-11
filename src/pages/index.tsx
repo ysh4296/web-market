@@ -1,16 +1,29 @@
 import {
-  Theme,
+  ThemeProvider,
+  createTheme,
   Container,
-  Heading,
-  Text,
+  Typography,
   Button,
   Card,
-  Separator,
+  Divider,
   Box,
-} from "@radix-ui/themes";
-import "@radix-ui/themes/styles.css";
-import { BrandingView } from "@views/BrandingView";
+} from "@mui/material";
+import BrandingView from "@views/BrandingView";
 
+// MUI 다크 테마 설정
+const theme = createTheme({
+  palette: {
+    mode: "dark",
+    primary: { main: "#6366f1" }, // indigo
+    grey: { 200: "#cbd5e1", 300: "#94a3b8", 700: "#334155" },
+    background: { default: "#0f172a", paper: "#1e293b" },
+  },
+  typography: {
+    fontFamily: `"Inter", "Pretendard", sans-serif`,
+  },
+});
+
+// 이미지 placeholder 컴포넌트
 function ImagePlaceholder({
   label,
   height = 280,
@@ -19,16 +32,16 @@ function ImagePlaceholder({
     <Box
       role="img"
       aria-label={label}
-      style={{
+      sx={{
         height,
-        borderRadius: 16,
-        border: "1.5px dashed var(--gray-6)",
-        background: "var(--gray-2)",
+        borderRadius: 2,
+        border: "1.5px dashed rgba(255,255,255,0.2)",
+        background: "rgba(255,255,255,0.04)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         fontSize: 16,
-        color: "var(--gray-11)",
+        color: "rgba(255,255,255,0.6)",
         textAlign: "center",
         margin: "0 auto",
         maxWidth: 600,
@@ -41,165 +54,177 @@ function ImagePlaceholder({
 
 export default function AntiMotionSicknessLanding() {
   return (
-    <Theme appearance="dark" accentColor="indigo" grayColor="slate">
+    <ThemeProvider theme={theme}>
       <main
         style={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
           gap: 64,
           width: "100%",
+          background: theme.palette.background.default,
         }}
       >
+        {/* Hero Section */}
         <BrandingView />
 
-        <Separator size="4" />
+        <Divider sx={{ width: "100%", opacity: 0.1 }} />
 
         {/* 문제 제시 */}
-        <section style={{ textAlign: "center" }}>
-          <Container size="3" style={{ maxWidth: 720, margin: "0 auto" }}>
-            <Heading size="7" style={{ marginBottom: 12 }}>
+        <section style={{ textAlign: "center", width: "100%" }}>
+          <Container maxWidth="md">
+            <Typography variant="h4" sx={{ mb: 1 }}>
               왜 멀미가 생길까
-            </Heading>
-            <Text size="4" color="gray">
+            </Typography>
+
+            <Typography variant="body1" sx={{ color: "grey.300" }}>
               카메라 급회전, 불균형 FOV, 시야 흔들림이 평형감각과 시각 정보의
-              불일치를 만든다.
-              <br />
+              불일치를 만든다. <br />
               장시간 플레이 시 방향감 상실과 피로를 유발한다.
-            </Text>
-            <div style={{ marginTop: 24 }}>
+            </Typography>
+
+            <Box mt={3}>
               <ImagePlaceholder label="문제 상황을 설명하는 이미지" />
-            </div>
+            </Box>
           </Container>
         </section>
 
-        <Separator size="4" />
+        <Divider sx={{ width: "100%", opacity: 0.1 }} />
 
         {/* 해결책 소개 */}
-        <section style={{ textAlign: "center" }}>
-          <Container size="3" style={{ maxWidth: 720, margin: "0 auto" }}>
-            <Heading size="7" style={{ marginBottom: 12 }}>
+        <section style={{ textAlign: "center", width: "100%" }}>
+          <Container maxWidth="md">
+            <Typography variant="h4" sx={{ mb: 1 }}>
               우리는 이렇게 해결한다
-            </Heading>
+            </Typography>
+
             <Card
-              size="3"
-              style={{
-                padding: 28,
+              sx={{
+                p: 4,
                 display: "flex",
                 flexDirection: "column",
-                gap: 16,
+                gap: 2,
                 alignItems: "center",
               }}
             >
-              <div>
-                <Heading size="4">시야 중심 HUD</Heading>
-                <Text color="gray">
+              {/* item 1 */}
+              <Box>
+                <Typography variant="h6">시야 중심 HUD</Typography>
+                <Typography sx={{ color: "grey.300" }}>
                   고정 기준점을 제공해 급회전 시에도 방향감을 유지한다.
-                </Text>
-              </div>
-              <div>
-                <Heading size="4">밝기·대비 자동 보정</Heading>
-                <Text color="gray">
+                </Typography>
+              </Box>
+
+              {/* item 2 */}
+              <Box>
+                <Typography variant="h6">
+                  {" "}
+                  brightness · 대비 자동 보정
+                </Typography>
+                <Typography sx={{ color: "grey.300" }}>
                   어두운 장면 전환 시 눈부심과 피로를 줄여준다.
-                </Text>
-              </div>
-              <div>
-                <Heading size="4">포스트잇 방향 가이드</Heading>
-                <Text color="gray">
-                  화면 모서리에 단순한 색상/문구 포스트잇을 배치해 방향 상실을
+                </Typography>
+              </Box>
+
+              {/* item 3 */}
+              <Box>
+                <Typography variant="h6">포스트잇 방향 가이드</Typography>
+                <Typography sx={{ color: "grey.300" }}>
+                  화면 모서리의 단순한 색상/문구 포스트잇으로 방향 상실을
                   방지한다.
-                </Text>
-              </div>
+                </Typography>
+              </Box>
             </Card>
-            <div style={{ marginTop: 20 }}>
+
+            <Box mt={3}>
               <ImagePlaceholder label="HUD 오버레이 예시 이미지" />
-            </div>
+            </Box>
           </Container>
         </section>
 
-        <Separator size="4" />
+        <Divider sx={{ width: "100%", opacity: 0.1 }} />
 
         {/* 데모 */}
-        <section style={{ textAlign: "center" }}>
-          <Container size="3" style={{ maxWidth: 720, margin: "0 auto" }}>
-            <Heading size="7" style={{ marginBottom: 8 }}>
+        <section style={{ textAlign: "center", width: "100%" }}>
+          <Container maxWidth="md">
+            <Typography variant="h4" sx={{ mb: 1 }}>
               시연을 확인해봐
-            </Heading>
-            <Text color="gray">
+            </Typography>
+            <Typography sx={{ color: "grey.300" }}>
               HUD On/Off 비교로 효과를 직접 확인할 수 있다.
-            </Text>
-            <div style={{ marginTop: 20 }}>
+            </Typography>
+
+            <Box mt={3}>
               <ImagePlaceholder label="데모 영상 썸네일 이미지" height={320} />
-            </div>
-            <div style={{ marginTop: 16 }}>
-              <Button size="3" variant="outline">
+            </Box>
+
+            <Box mt={2}>
+              <Button variant="outlined" size="large">
                 영상 보기
               </Button>
-            </div>
+            </Box>
           </Container>
         </section>
 
-        <Separator size="4" />
+        <Divider sx={{ width: "100%", opacity: 0.1 }} />
 
         {/* 후기 */}
-        <section style={{ textAlign: "center" }}>
-          <Container size="3" style={{ maxWidth: 720, margin: "0 auto" }}>
-            <Heading size="7" style={{ marginBottom: 16 }}>
+        <section style={{ textAlign: "center", width: "100%" }}>
+          <Container maxWidth="md">
+            <Typography variant="h4" sx={{ mb: 3 }}>
               사용자 후기
-            </Heading>
-            <Card style={{ marginBottom: 12 }}>
-              <Box p="3">
-                <Text size="4">“10분도 힘들었는데 이제 1시간은 거뜬하다.”</Text>
-                <Text color="gray">- 게이머 A</Text>
+            </Typography>
+
+            <Card sx={{ mb: 2 }}>
+              <Box p={3}>
+                <Typography variant="h6">
+                  “10분도 힘들었는데 이제 1시간은 거뜬하다.”
+                </Typography>
+                <Typography sx={{ color: "grey.400" }}>- 게이머 A</Typography>
               </Box>
             </Card>
+
             <Card>
-              <Box p="3">
-                <Text size="4">
+              <Box p={3}>
+                <Typography variant="h6">
                   “HUD 켜고 나서 방향감이 유지돼 집중도가 올라갔다.”
-                </Text>
-                <Text color="gray">- 개발자 B</Text>
+                </Typography>
+                <Typography sx={{ color: "grey.400" }}>- 개발자 B</Typography>
               </Box>
             </Card>
           </Container>
         </section>
 
-        <Separator size="4" />
+        <Divider sx={{ width: "100%", opacity: 0.1 }} />
 
         {/* CTA */}
         <section
-          style={{
-            textAlign: "center",
-            width: "100%",
-            padding: "60px 0",
-          }}
+          style={{ textAlign: "center", width: "100%", padding: "60px 0" }}
         >
-          <Container size="3" style={{ maxWidth: 720, margin: "0 auto" }}>
-            <Heading size="8" style={{ marginBottom: 8 }}>
+          <Container maxWidth="md">
+            <Typography variant="h3" sx={{ mb: 1 }}>
               지금 바로 체험해봐
-            </Heading>
-            <Text color="gray">
+            </Typography>
+
+            <Typography sx={{ color: "grey.300" }}>
               무료로 시작하고, 맞다면 프로 버전으로 업그레이드하자.
-            </Text>
-            <div
-              style={{
-                marginTop: 20,
-                display: "flex",
-                gap: 12,
-                justifyContent: "center",
-              }}
+            </Typography>
+
+            <Box
+              mt={3}
+              sx={{ display: "flex", gap: 2, justifyContent: "center" }}
             >
-              <Button size="4" variant="solid">
+              <Button variant="contained" size="large">
                 무료 다운로드
               </Button>
-              <Button size="4" variant="soft">
+              <Button variant="outlined" size="large">
                 설치 가이드
               </Button>
-            </div>
-            <div style={{ marginTop: 20 }}>
+            </Box>
+
+            <Box mt={3}>
               <ImagePlaceholder label="다운로드 안내 이미지" height={180} />
-            </div>
+            </Box>
           </Container>
         </section>
 
@@ -207,16 +232,16 @@ export default function AntiMotionSicknessLanding() {
         <footer
           style={{
             textAlign: "center",
-            borderTop: "1px solid var(--gray-5)",
+            borderTop: "1px solid rgba(255,255,255,0.1)",
             width: "100%",
             padding: "24px 0",
           }}
         >
-          <Text color="gray">
+          <Typography sx={{ color: "grey.500" }}>
             © {new Date().getFullYear()} Motion Layout. All rights reserved.
-          </Text>
+          </Typography>
         </footer>
       </main>
-    </Theme>
+    </ThemeProvider>
   );
 }

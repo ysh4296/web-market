@@ -2,6 +2,9 @@ import type { GatsbyConfig } from "gatsby";
 
 const config: GatsbyConfig = {
   plugins: [
+    "gatsby-plugin-typescript",
+    "gatsby-theme-material-ui",
+    "gatsby-plugin-image",
     {
       resolve: "gatsby-plugin-babel",
       options: {
@@ -15,7 +18,7 @@ const config: GatsbyConfig = {
           "@views": "src/views",
           "@images": "src/images",
         },
-        extensions: ["ts", "tsx", "js", "jsx", "ico"],
+        extensions: ["ts", "tsx", "js", "jsx"],
       },
     },
   ],
