@@ -25,7 +25,7 @@ export default function Seo({ descriptionKey = "brand.subtitle" }: SeoProps) {
   const description = t(descriptionKey);
   const keywords = t("seo.keywords", { defaultValue: "" });
   const siteTitle = data.site?.siteMetadata?.title ?? "Dizzy-Shield";
-  const siteUrl = window.location.origin;
+  const siteUrl = data.site?.siteMetadata?.siteUrl ?? "";
   const image = `${siteUrl}/favicon.ico`;
 
   return (

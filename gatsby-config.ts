@@ -3,7 +3,7 @@
 const config: GatsbyConfig = {
   siteMetadata: {
     title: "Dizzy-Shield",
-    siteUrl: "https://example.com",
+    siteUrl: "https://web-market-xi.vercel.app/",
   },
   plugins: [
     "gatsby-plugin-typescript",
