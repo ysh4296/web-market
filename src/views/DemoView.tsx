@@ -1,9 +1,28 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import * as THREE from "three";
 
-export default function DemoView() {
+type DemoViewProps = {
+  showFullscreenButton?: boolean;
+  overlay?: ReactNode;
+  onMountRefChange?: (el: HTMLDivElement | null) => void;
+  onFullscreenChange?: (isFs: boolean) => void;
+  inputsDisabled?: boolean;
+};
+
+export default function DemoView({
+  showFullscreenButton = true,
+  overlay,
+  onMountRefChange,
+  onFullscreenChange,
+  inputsDisabled = false,
+}: DemoViewProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const mountRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    onMountRefChange?.(mountRef.current);
+    return () => onMountRefChange?.(null);
+  }, [onMountRefChange]);
 
   useEffect(() => {
     if (!mountRef.current) return;
@@ -331,25 +350,33 @@ export default function DemoView() {
     // ===== INPUT =====
     const keys = { w: false, s: false, a: false, d: false, space: false };
 
-    window.addEventListener("keydown", (e) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (inputsDisabled) return;
       if (e.code === "KeyW") keys.w = true;
       if (e.code === "KeyS") keys.s = true;
       if (e.code === "KeyA") keys.a = true;
       if (e.code === "KeyD") keys.d = true;
       if (e.code === "Space") keys.space = true;
-    });
+    };
 
-    window.addEventListener("keyup", (e) => {
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (inputsDisabled) return;
       if (e.code === "KeyW") keys.w = false;
       if (e.code === "KeyS") keys.s = false;
       if (e.code === "KeyA") keys.a = false;
       if (e.code === "KeyD") keys.d = false;
       if (e.code === "Space") keys.space = false;
-    });
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
 
     // ===== MOUSE LOOK =====
     let yaw = 0;
     let pitch = 0;
+    let renderYaw = 0;
+    let renderPitch = 0;
+    let fovPhase = 0;
 
     window.addEventListener("mousemove", (e) => {
       if (document.pointerLockElement !== renderer.domElement) return;
@@ -359,8 +386,6 @@ export default function DemoView() {
 
       pitch = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, pitch));
 
-      yawGroup.rotation.y = yaw;
-      pitchGroup.rotation.x = pitch;
     });
 
     renderer.domElement.onclick = () => {
@@ -375,7 +400,9 @@ export default function DemoView() {
     };
 
     const handleFullscreenChange = () => {
-      setIsFullscreen(Boolean(document.fullscreenElement));
+      const fs = Boolean(document.fullscreenElement);
+      setIsFullscreen(fs);
+      onFullscreenChange?.(fs);
       handleResize();
     };
 
@@ -403,10 +430,18 @@ export default function DemoView() {
     let rollBobOffset = 0;
     let pitchBobOffset = 0;
     let bobOffset = 0;
+    let landingRoll = 0;
+    let landingPitch = 0;
 
     // ===== LOOP =====
     function animate() {
       requestAnimationFrame(animate);
+
+      renderYaw = THREE.MathUtils.lerp(renderYaw, yaw, 0.14);
+      renderPitch = THREE.MathUtils.lerp(renderPitch, pitch, 0.14);
+
+      yawGroup.rotation.y = renderYaw;
+      pitchGroup.rotation.x = renderPitch;
 
       const forward = new THREE.Vector3(Math.sin(yaw), 0, Math.cos(yaw));
       const right = new THREE.Vector3(Math.cos(yaw), 0, -Math.sin(yaw));
@@ -430,28 +465,28 @@ export default function DemoView() {
         0.0125,
       );
 
-      bobPhase += speed * 3.5;
-      const targetRollBob = Math.sin(bobPhase) * 0.008 * speedNorm;
+      bobPhase += speed * 3;
+      const targetRollBob = Math.sin(bobPhase) * 0.01 * speedNorm;
       const targetPitchBob =
-        Math.sin(bobPhase + Math.PI / 2) * 0.015 * speedNorm;
-      const targetBob = Math.sin(bobPhase) * 0.03 * speedNorm;
+        Math.sin(bobPhase + Math.PI / 2) * 0.02 * speedNorm;
+      const targetBob = Math.sin(bobPhase) * 0.04 * speedNorm;
 
-      rollOffset = THREE.MathUtils.lerp(rollOffset, targetRoll, 0.16);
+      rollOffset = THREE.MathUtils.lerp(rollOffset, targetRoll, 0.2);
       pitchSwayOffset = THREE.MathUtils.lerp(
         pitchSwayOffset,
         targetPitchSway,
-        0.16,
+        0.2,
       );
-      rollBobOffset = THREE.MathUtils.lerp(rollBobOffset, targetRollBob, 0.22);
+      rollBobOffset = THREE.MathUtils.lerp(rollBobOffset, targetRollBob, 0.24);
       pitchBobOffset = THREE.MathUtils.lerp(
         pitchBobOffset,
         targetPitchBob,
-        0.22,
+        0.24,
       );
-      bobOffset = THREE.MathUtils.lerp(bobOffset, targetBob, 0.25);
+      bobOffset = THREE.MathUtils.lerp(bobOffset, targetBob, 0.28);
 
-      camera.rotation.z = rollOffset + rollBobOffset;
-      camera.rotation.x = pitchSwayOffset + pitchBobOffset;
+      camera.rotation.z = rollOffset + rollBobOffset + landingRoll;
+      camera.rotation.x = pitchSwayOffset + pitchBobOffset + landingPitch;
       camera.position.y = bobOffset;
 
       // ===== JUMP =====
@@ -477,14 +512,28 @@ export default function DemoView() {
         Math.min(AREA - 1, yawGroup.position.z),
       );
 
-      // Ground clamp
+      // Ground clamp + landing jolt
       if (yawGroup.position.y <= 2) {
+        if (!onGround && verticalVel < -0.02) {
+          landingRoll = (Math.random() - 0.5) * 0.04;
+          landingPitch = -0.025;
+        }
         yawGroup.position.y = 2;
         verticalVel = 0;
         onGround = true;
       } else {
         onGround = false;
       }
+
+      landingRoll *= 0.88;
+      landingPitch *= 0.88;
+
+      // FOV pulsing based on speed
+      fovPhase += speed * 2;
+      const baseFov = 125;
+      const fovPulse = Math.sin(fovPhase) * 2 * speedNorm;
+      camera.fov = baseFov + fovPulse;
+      camera.updateProjectionMatrix();
 
       renderer.render(scene, camera);
     }
@@ -494,9 +543,11 @@ export default function DemoView() {
     return () => {
       window.removeEventListener("resize", handleResize);
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
       mountRef.current?.removeChild(renderer.domElement);
     };
-  }, []);
+  }, [inputsDisabled]);
 
   return (
     <div
@@ -504,6 +555,7 @@ export default function DemoView() {
       style={{
         position: "relative",
         width: isFullscreen ? "100vw" : "800px",
+        maxWidth: "100%",
         height: isFullscreen ? "100vh" : "640px",
         background: "#87CEEB",
         borderRadius: "12px",
@@ -511,33 +563,37 @@ export default function DemoView() {
         boxShadow: "0 20px 40px rgba(0,0,0,0.35)",
       }}
     >
-      {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
-      <button
-        onClick={() => {
-          if (!mountRef.current) return;
-          if (document.fullscreenElement) {
-            document.exitFullscreen().catch(() => {});
-          } else {
-            mountRef.current.requestFullscreen?.().catch(() => {});
-          }
-        }}
-        style={{
-          position: "absolute",
-          top: 12,
-          right: 12,
-          zIndex: 2,
-          padding: "8px 12px",
-          borderRadius: 8,
-          border: "1px solid rgba(255,255,255,0.25)",
-          background: "rgba(20,22,35,0.55)",
-          color: "#f5f5f5",
-          cursor: "pointer",
-          fontWeight: 600,
-          backdropFilter: "blur(6px)",
-        }}
-      >
-        {isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
-      </button>
+      {overlay}
+
+      {showFullscreenButton && (
+        // biome-ignore lint/a11y/useButtonType: <explanation>
+        <button
+          onClick={() => {
+            if (!mountRef.current) return;
+            if (document.fullscreenElement) {
+              document.exitFullscreen().catch(() => {});
+            } else {
+              mountRef.current.requestFullscreen?.().catch(() => {});
+            }
+          }}
+          style={{
+            position: "absolute",
+            top: 12,
+            right: 12,
+            zIndex: 2,
+            padding: "8px 12px",
+            borderRadius: 8,
+            border: "1px solid rgba(255,255,255,0.25)",
+            background: "rgba(20,22,35,0.55)",
+            color: "#f5f5f5",
+            cursor: "pointer",
+            fontWeight: 600,
+            backdropFilter: "blur(6px)",
+          }}
+        >
+          {isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+        </button>
+      )}
     </div>
   );
 }

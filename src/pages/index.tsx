@@ -1,6 +1,6 @@
 import { ThemeProvider, createTheme, Divider } from "@mui/material";
 import BrandingView from "@views/BrandingView";
-import DemoView from "@views/DemoView";
+import DemoPanel from "@views/DemoPanel";
 import DescriptionView from "@views/DescriptionView";
 import FooterView from "@views/FooterView";
 
@@ -64,7 +64,7 @@ export default function AntiMotionSicknessLanding() {
         <Divider sx={{ width: "100%", opacity: 0.1 }} />
 
         {/* Demo Section */}
-        <DemoView />
+        <DemoPanel />
 
         <Divider sx={{ width: "100%", opacity: 0.1 }} />
 
