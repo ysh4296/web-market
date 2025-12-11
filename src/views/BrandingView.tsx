@@ -1,14 +1,7 @@
 import { Box, Container, Typography } from "@mui/material";
-import { keyframes } from "@mui/system";
-import dizzySheld from "@images/dizzy-shield.ico";
+import dizzyShield from "@images/dizzy-shield.ico";
 import ShineButton from "@components/ShineButton";
-
-// float 애니메이션 (SSR-safe)
-const floatIcon = keyframes`
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-12px); }
-  100% { transform: translateY(0); }
-`;
+import { pulseGlow, popIn, fadeUp } from "@utils/keyFrames";
 
 const BrandingView = () => {
   return (
@@ -19,42 +12,75 @@ const BrandingView = () => {
         minHeight: "80vh",
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
         justifyContent: "center",
         textAlign: "center",
         position: "relative",
+        maxWidth: "1200px",
       }}
     >
-      {/* 아이콘 + 애니메이션 */}
+      {/* 아이콘 */}
       <Box
         component="img"
-        src={dizzySheld}
+        src={dizzyShield}
         alt="멀미 안정 아이콘"
         sx={{
           width: 120,
           height: 120,
           position: "absolute",
           top: 160,
-          animation: `${floatIcon} 3s ease-in-out infinite`,
+          left: 120,
+          animation: `${pulseGlow} 3s ease-in-out infinite, ${popIn} 0.8s ease-out`,
           opacity: 0.9,
+          border: "2px solid rgba(118,124,255,0.8)",
+          borderRadius: "12px",
           filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.4))",
         }}
       />
 
-      {/* 텍스트 컨텐츠 */}
-      <Container sx={{ maxWidth: 720, mt: 30 }}>
+      {/* 텍스트 영역 */}
+      <Container sx={{ maxWidth: 720, mt: 30, textAlign: "start" }}>
         <Typography
-          variant="h2"
-          sx={{ lineHeight: 1.1, mb: 2, fontWeight: 700 }}
+          variant="h1"
+          color="primary"
+          sx={{
+            animation: `${fadeUp} .6s ease-out`,
+            animationDelay: "0.2s",
+            opacity: 0,
+            animationFillMode: "forwards",
+          }}
         >
-          3D 멀미, 이제는 그만
+          Dizzy-Shield
         </Typography>
 
-        <Typography variant="h5" color="grey.400">
-          시야 안정 레이아웃으로 방향감과 몰입감을 동시에 지킨다
+        <Typography
+          variant="h2"
+          sx={{
+            lineHeight: 1.1,
+            mb: 2,
+            fontWeight: 700,
+            animation: `${fadeUp} .6s ease-out`,
+            animationDelay: "0.4s",
+            mt: 4,
+            opacity: 0,
+            animationFillMode: "forwards",
+          }}
+        >
+          균형 보조 UI를 통해 게임 멀미를 줄이세요
         </Typography>
       </Container>
-      <ShineButton>지금 체험하기</ShineButton>
+
+      {/* 버튼 */}
+      <Box
+        sx={{
+          mt: 8,
+          animation: `${fadeUp} .6s ease-out`,
+          animationDelay: "0.6s",
+          opacity: 0,
+          animationFillMode: "forwards",
+        }}
+      >
+        <ShineButton>지금 체험하기</ShineButton>
+      </Box>
     </Box>
   );
 };

@@ -1,28 +1,5 @@
 import { Button, Box } from "@mui/material";
-import { keyframes } from "@mui/system";
-
-// 메인 shine (빠르게 지나가는 빛)
-const shineMain = keyframes`
-  0% { transform: translateX(-150%) skewX(-25deg); opacity: 0; }
-  20% { opacity: 1; }
-  50% { opacity: 0.9; transform: translateX(50%) skewX(-25deg); }
-  100% { opacity: 0; transform: translateX(200%) skewX(-25deg); }
-`;
-
-// 잔광 (follow-up glow trail)
-const shineTrail = keyframes`
-  0% { transform: translateX(-180%) skewX(-25deg); opacity: 0; }
-  30% { opacity: 0.4; }
-  70% { opacity: 0.15; transform: translateX(120%) skewX(-25deg); }
-  100% { opacity: 0; transform: translateX(220%) skewX(-25deg); }
-`;
-
-// 테두리 펄스 (살짝 살아 움직이는)
-const borderPulse = keyframes`
-  0% { box-shadow: 0 0 10px rgba(118,124,255,0.6); }
-  50% { box-shadow: 0 0 24px rgba(158,164,255,1); }
-  100% { box-shadow: 0 0 10px rgba(118,124,255,0.6); }
-`;
+import { borderPulse, shineMain, shineTrail } from "@utils/keyFrames";
 
 const ShineButton = ({ children }: { children: React.ReactNode }) => {
   return (
