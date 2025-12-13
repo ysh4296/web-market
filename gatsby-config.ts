@@ -9,6 +9,7 @@ const config: GatsbyConfig = {
     "gatsby-plugin-typescript",
     "gatsby-theme-material-ui",
     "gatsby-plugin-image",
+    "gatsby-plugin-sitemap",
     {
       resolve: "gatsby-plugin-alias-imports",
       options: {
