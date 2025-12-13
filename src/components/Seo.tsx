@@ -44,6 +44,10 @@ export default function Seo({
       <meta name="twitter:card" content="summary" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
+      <meta
+        name="google-site-verification"
+        content="iHNHzPKgmM6oER9klgMGHOkOrVxQXuLaO8GNVjLCqGc"
+      />
       <link rel="icon" href={image} />
     </>
   );
