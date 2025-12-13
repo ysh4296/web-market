@@ -10,12 +10,6 @@ const config: GatsbyConfig = {
     "gatsby-theme-material-ui",
     "gatsby-plugin-image",
     {
-      resolve: "gatsby-plugin-babel",
-      options: {
-        presets: [["@babel/preset-react", { runtime: "automatic" }]],
-      },
-    },
-    {
       resolve: "gatsby-plugin-alias-imports",
       options: {
         alias: {

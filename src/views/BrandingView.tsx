@@ -79,7 +79,7 @@ const BrandingView = () => {
           animationFillMode: "forwards",
         }}
       >
-        <ShineButton>{t("brand.cta")}</ShineButton>
+        <ShineButton onClick={() => alert("The product is currently under preparation.")}>{t("brand.cta")}</ShineButton>
       </Box>
     </Box>
   );

@@ -1,7 +1,12 @@
 import { Button, Box } from "@mui/material";
 import { borderPulse, shineMain, shineTrail } from "@utils/keyFrames";
 
-const ShineButton = ({ children }: { children: React.ReactNode }) => {
+interface ShineButtonProps {
+  onClick?: () => void;
+  children: React.ReactNode;
+}
+
+const ShineButton = ({ onClick, children }: ShineButtonProps) => {
   return (
     <Box
       sx={{
@@ -46,6 +51,7 @@ const ShineButton = ({ children }: { children: React.ReactNode }) => {
       />
 
       <Button
+        onClick={onClick}
         sx={{
           borderRadius: "12px",
           px: 5,

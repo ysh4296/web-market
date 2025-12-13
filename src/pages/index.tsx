@@ -7,7 +7,7 @@ import BrandingView from "@views/BrandingView";
 import DemoPanel from "@views/DemoPanel";
 import DescriptionView from "@views/DescriptionView";
 import FooterView from "@views/FooterView";
-import { Analytics } from "@vercel/analytics/next";
+import { Analytics } from "@vercel/analytics/react";
 
 const theme = createTheme({
   palette: {
