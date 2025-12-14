@@ -3,7 +3,7 @@
 const config: GatsbyConfig = {
   siteMetadata: {
     title: "Dizzy-Shield",
-    siteUrl: "https://web-market-xi.vercel.app/",
+    siteUrl: "https://www.dizzyshield.com/",
   },
   plugins: [
     "gatsby-plugin-typescript",
@@ -38,7 +38,7 @@ const config: GatsbyConfig = {
         languages: ["ko", "en", "ja", "es", "zh"],
         defaultLanguage: "ko",
         fallbackLanguage: "en",
-        siteUrl: "https://example.com",
+        siteUrl: "https://www.dizzyshield.com/",
         i18nextOptions: {
           supportedLngs: ["ko", "en", "ja", "es", "zh"],
           ns: ["translation", "seo"],

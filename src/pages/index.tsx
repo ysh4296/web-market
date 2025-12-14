@@ -1,5 +1,6 @@
 ﻿import { Box, Divider, ThemeProvider, createTheme } from "@mui/material";
 import { type HeadFC, graphql } from "gatsby";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import LanguageSwitcher from "@components/LanguageSwitcher";
 import Seo from "@components/Seo";
@@ -46,6 +47,8 @@ const theme = createTheme({
 });
 
 export default function App() {
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     <ThemeProvider theme={theme}>
       <main
@@ -78,9 +81,12 @@ export default function App() {
 
         <Divider sx={{ width: "100%", opacity: 0.1 }} />
 
-        <DemoPanel />
-
-        <Divider sx={{ width: "100%", opacity: 0.1 }} />
+        {isMobile ? null : (
+          <>
+            <DemoPanel />
+            <Divider sx={{ width: "100%", opacity: 0.1 }} />
+          </>
+        )}
 
         <FooterView />
       </main>
